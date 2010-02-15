@@ -66,9 +66,9 @@ def namify(text):
 class BasicNode(template.Node):
     """ Basic Node object that we can rely on for Node objects in normal
         template tags. I created this because most of the tags we'll be using
-        will need both the form object and the helper string. This handles
-        both the form object and parses out the helper string into attributes
-        that templates can easily handle. """
+        will need both the form and helper objects. This both handles the form
+        object and extracts attributes from the helper so that templates can
+        easily handle them."""
     
     def __init__(self, form, helper):
         self.form = template.Variable(form)
@@ -126,48 +126,12 @@ def do_uni_form(parser, token):
     
     """
     You need to pass in at least the form object, and can also pass in the
-    optional attrs string. Writing the attrs string is rather challenging so
-    use of the objects found in uni_form.helpers is encouraged.
-    
+    optional helper object (see :module:`uni_form.helpers`).
+
     form: The forms object to be rendered by the tag
-    
-    attrs (optional): A string of semi-colon seperated attributes that can be
-    applied to theform in string format. They are used as follows.
-    
-    form_action: applied to the form action attribute. Can be a named url in 
-    your urlconf that can be executed via the *url* default template tag or can
-    simply point to another URL. 
-    Defaults to empty::
-        
-        form_action=<my-form-action>
-    
-    form_method: applied to the form action attribute. Defaults to POST and the only available thing you can enter is GET.::
-        
-        form_method=<my-form-method>
-    
-    id: applied to the form as a whole. Defaults to empty::
-        
-        id=<my-form-id>
-    
-    class: add space seperated classes to the class list. Always starts with uniform::
-        
-        class=<my-first-custom-form-class> <my-custom-form-class>
-    
-    button: for adding of generic buttons. The name also becomes the slugified id::
-        
-        button=<my-custom-button-name>|<my-custom-button-value>
-    
-    submit: For adding of submt buttons. The name also becomes the slugified id::
-        
-        submit=<my-custom-submit-name>|<my-custom-submit-value>
-    
-    hidden: For adding of hidden buttons::
-        
-        hidden=<my-custom-hidden-name>|<my-custom-hidden-value>
-    
-    reset: For adding of reset buttons::
-        
-        reset=<my-custom-reset-name>|<my-custom-reset-value>
+
+    helper (optional): A helper object which contains attributes that can be
+    applied to the form. See :class:`uni_form.helpers.FormHelper`.
 
     
     Example::
@@ -216,12 +180,12 @@ def uni_form_jquery(parser, token):
     
     form = token.pop(1)
     try:
-        attrs = token.pop(1)
+        helper = token.pop(1)
     except IndexError:
-        attrs = None
+        helper = None
 
     
-    return UniFormJqueryNode(form,attrs)
+    return UniFormJqueryNode(form, helper)
 
 class UniFormJqueryNode(BasicNode):
     
