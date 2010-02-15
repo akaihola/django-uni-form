@@ -110,3 +110,16 @@ class TestFormHelpers(TestCase):
         good_response = """<form action="" class="uniForm forms-that-rock" method="POST" id="this-form-rocks" >"""
         
         #self.assertTrue('<form action="" class="uniForm forms-that-rock" method="GET" id="this-form-rocks" >' in html)
+
+    def test_default_helper(self):
+        """Use default values if the helper is omitted"""
+
+        c = Context({'form': TestForm()})
+        template = get_template_from_string("""
+{% load uni_form_tags %}
+{% uni_form form %}
+        """)
+        html = template.render(c)
+
+        self.assertTrue('<form action="" class="uniForm " method="POST">'
+                        in html)

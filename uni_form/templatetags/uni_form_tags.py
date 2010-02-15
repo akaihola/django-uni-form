@@ -72,25 +72,22 @@ class BasicNode(template.Node):
     
     def __init__(self, form, helper):
         self.form = template.Variable(form)
-        self.helper = template.Variable(helper)
+        self.helper = helper and template.Variable(helper)
     
     def get_render(self, context):
         actual_form = self.form.resolve(context)
-        helper = self.helper.resolve(context)
-        attrs = None
-        if helper:
+        if self.helper:
+            helper = self.helper.resolve(context)
             attrs = helper.get_attr()
-        form_class = ''
-        form_id = ''
-        inputs = []
-        toggle_fields = set(())
-        if attrs:
-            form_method = attrs.get("form_method", 'POST')
-            form_action = attrs.get("form_action", '')
-            form_class = attrs.get("class", '')
-            form_id = attrs.get("id", "")
-            inputs = attrs.get('inputs', [])
-            toggle_fields = attrs.get('toggle_fields', set(()))
+        else:
+            helper = None
+            attrs = {}
+        form_method = attrs.get("form_method", 'POST')
+        form_action = attrs.get("form_action", '')
+        form_class = attrs.get("class", '')
+        form_id = attrs.get("id", "")
+        inputs = attrs.get('inputs', [])
+        toggle_fields = attrs.get('toggle_fields', set(()))
         final_toggle_fields = []
         if toggle_fields:
             final_toggle_fields = []
