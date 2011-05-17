@@ -43,13 +43,13 @@ def as_uni_field(field):
 @register.inclusion_tag("uni_form/includes.html", takes_context=True)
 def uni_form_setup(context):
     """
-Creates the <style> and <script> tags needed to initialize the uni-form.
- 
-Create a local uni-form/includes.html template if you want to customize how
-these files are loaded. 
-"""
-    if 'MEDIA_URL' not in context:
-        context['MEDIA_URL'] = settings.MEDIA_URL        
+    Creates the <style> and <script> tags needed to initialize the uni-form.
+
+    Create a local uni-form/includes.html template if you want to customize how
+    these files are loaded.
+    """
+    if 'STATIC_URL' not in context:
+        context['STATIC_URL'] = settings.MEDIA_URL
     return (context)
 
 ############################################################################
